@@ -1,4 +1,4 @@
-# Views for the recipe APIs
+"""Views for the recipe APIs"""
 from drf_spectacular.utils import (
     extend_schema_view,
     extend_schema,
@@ -44,7 +44,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
         return [int(str_id) for str_id in qs.split(",")]
 
     def get_queryset(self):
-        # Retrieve recipes for authenticated user
+        """Retrieve recipes for authenticated user"""
         tags = self.request.query_params.get("tags")
         ingredients = self.request.query_params.get("ingredients")
         queryset = self.queryset
@@ -60,7 +60,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
             ).order_by("-id").distinct()
 
     def get_serializer_class(self):
-        # Return the serializer class for request
+        """Return the serializer class for request"""
         if self.action == "list":
             return serializers.RecipeSerializer
         elif self.action == "upload_image":
@@ -69,7 +69,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
         return self.serializer_class
 
     def perform_create(self, serializer):
-        # Create a new recipe
+        """Create a new recipe"""
         serializer.save(user=self.request.user)
 
     @action(methods=["POST"], detail=True, url_path="upload-image")
